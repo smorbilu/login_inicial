@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Login } from '../../interfaces/loginDto';
 
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -33,11 +34,24 @@ export class LoginComponent {
 
   // 🔁 mismo método login, misma lógica
   login(){
-    if(this.loginForm.invalid) return;
 
-    const objectRequest: Login = this.loginForm.value;
+  if(this.loginForm.invalid){
 
-    console.log('Usuario:', objectRequest.username);
-    console.log('Password:', objectRequest.password);
+    Object.keys(this.loginForm.controls).forEach(field=>{
+      const control = this.loginForm.get(field);
+
+      if(control?.invalid){
+        console.error(`Campo obligatorio: ${field}`);
+      }
+    });
+
+    return;
   }
+
+  const objectRequest: Login = this.loginForm.value;
+
+  console.log("Usuario:", objectRequest.username);
+  console.log("Password:", objectRequest.password);
+  }
+
 }
