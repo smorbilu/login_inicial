@@ -22,7 +22,7 @@ import { Login } from '../../interfaces/loginDto';
 })
 export class LoginComponent {
 
-  // ✅ nuevo form reactivo
+  
   loginForm: FormGroup;
 
   constructor(private fb: FormBuilder){
@@ -32,7 +32,7 @@ export class LoginComponent {
     });
   }
 
-  // 🔁 mismo método login, misma lógica
+  
   login(){
 
   if(this.loginForm.invalid){
