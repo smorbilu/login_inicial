@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Login } from '../../interfaces/loginDto';
-import { AuthService } from '../../services/auth.service';   
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -18,53 +18,41 @@ import { AuthService } from '../../services/auth.service';
     MatButtonModule
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  styleUrl: './login.component.css'
 })
 export class LoginComponent {
 
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService   
-  ){
+    private authService: AuthService
+  ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
 
-  login(){
+  login() {
+    console.log('LOGIN CLICK');
 
-    if(this.loginForm.invalid){
-
-      Object.keys(this.loginForm.controls).forEach(field=>{
-        const control = this.loginForm.get(field);
-
-        if(control?.invalid){
-          console.error(`Campo obligatorio: ${field}`);
-        }
-      });
-
+    if (this.loginForm.invalid) {
+      console.log('Formulario inválido');
       return;
     }
 
-    const objectRequest: Login = this.loginForm.value;
+    const data: Login = this.loginForm.value;
 
-    this.authService.login(objectRequest).subscribe({
-      next: (res) => {
-        console.log('Login OK:', res);
+    const result = this.authService.login(data);
 
-        
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('user', JSON.stringify(res));
-
-        
-      },
-      error: (err) => {
-        console.error('Error login:', err.message);
-      }
-    });
-
+    if (result) {
+      console.log('✅ Login correcto');
+      alert('Login correcto');
+    } else {
+      console.log('❌ Credenciales incorrectas');
+      alert('Usuario o contraseña incorrectos');
+    }
   }
+
 }

@@ -1,7 +1,4 @@
-
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { delay } from 'rxjs/operators';
 import { Login } from '../interfaces/loginDto';
 
 @Injectable({
@@ -9,27 +6,17 @@ import { Login } from '../interfaces/loginDto';
 })
 export class AuthService {
 
-  private users = [
-    { username: 'admin', password: '1234', role: 'ADMIN', token: 'token_admin_123' },
-    { username: 'user', password: '1234', role: 'USER', token: 'token_user_123' }
-  ];
+  private fakeUser = {
+    username: 'admin',
+    password: '123456'
+  };
 
-  login(data: Login): Observable<any> {
-    const user = this.users.find(
-      u => u.username === data.username && u.password === data.password
+  login(data: Login): boolean {
+    console.log('DATA:', data);
+
+    return (
+      data.username === this.fakeUser.username &&
+      data.password === this.fakeUser.password
     );
-
-    if (!user) {
-      return throwError(() => ({
-        status: 401,
-        message: 'Credenciales incorrectas'
-      }));
-    }
-
-    return of({
-      username: user.username,
-      role: user.role,
-      token: user.token
-    }).pipe(delay(800)); 
   }
 }
