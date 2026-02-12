@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Login } from '../../interfaces/loginDto';
-
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -18,42 +18,41 @@ import { Login } from '../../interfaces/loginDto';
     MatButtonModule
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  styleUrl: './login.component.css'
 })
 export class LoginComponent {
 
-  
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder){
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService
+  ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
 
-  
-  login(){
+  login() {
+    console.log('LOGIN CLICK');
 
-  if(this.loginForm.invalid){
+    if (this.loginForm.invalid) {
+      console.log('Formulario inválido');
+      return;
+    }
 
-    Object.keys(this.loginForm.controls).forEach(field=>{
-      const control = this.loginForm.get(field);
+    const data: Login = this.loginForm.value;
 
-      if(control?.invalid){
-        console.error(`Campo obligatorio: ${field}`);
-      }
-    });
+    const result = this.authService.login(data);
 
-    return;
-  }
-
-  const objectRequest: Login = this.loginForm.value;
-
-  console.log("Usuario:", objectRequest.username);
-  console.log("Password:", objectRequest.password);
+    if (result) {
+      console.log('✅ Login correcto');
+      alert('Login correcto');
+    } else {
+      console.log('❌ Credenciales incorrectas');
+      alert('Usuario o contraseña incorrectos');
+    }
   }
 
 }
-
-/*correccion 4*/
